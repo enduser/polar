@@ -1,8 +1,6 @@
 {
-  "name": "masarliev/polar",
+  "name": "masarlievnet/polar",
   "description": "Expressive module",
-  "minimum-stability": "stable",
-  "license": "proprietary",
   "authors": [
     {
       "name": "Mitko Masarliev",
