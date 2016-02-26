@@ -7,6 +7,9 @@ use Interop\Container\Exception\ContainerException;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
+use Doctrine\Common\Annotations\AnnotationReader;
+use Doctrine\Common\Annotations\CachedReader;
+use Doctrine\Common\Cache\Cache;
 
 class AnnotationFactory implements FactoryInterface
 {
@@ -25,6 +28,11 @@ class AnnotationFactory implements FactoryInterface
      */
     public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
     {
-        return new Annotations($container);
+        $reader = new CachedReader(
+            new AnnotationReader(),
+            $container->get(Cache::class),
+            $container->get('config')['debug']
+        );
+        return new Annotations($reader, $container->get('config')['polar']['annotations']['middleware']);
     }
 }

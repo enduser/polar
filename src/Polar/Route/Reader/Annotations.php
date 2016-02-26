@@ -2,69 +2,36 @@
 
 namespace Polar\Route\Reader;
 
-use Doctrine\Common\Annotations\AnnotationReader;
-use Doctrine\Common\Annotations\CachedReader;
-use Doctrine\Common\Annotations\Reader;
-use Doctrine\Common\Cache\Cache;
-use Interop\Container\ContainerInterface;
+use Doctrine\Common\Persistence\Mapping\ClassMetadata;
+use Doctrine\Common\Persistence\Mapping\Driver\AnnotationDriver as AbstractAnnotationDriver;
 use ReflectionClass;
 
-class Annotations
+class Annotations extends AbstractAnnotationDriver
 {
-
     /**
-     * @var Reader
+     * {@inheritDoc}
      */
-    private $reader;
+    protected $entityAnnotationClasses = array(
+        'Polar\Annotation\Route' => 1,
+        'Polar\Annotation\Template' => 2,
+    );
 
-    /**
-     * @var  ContainerInterface
-     */
-    private $container;
-
-
-    private $cache;
-
-    /**
-     * @return Reader
-     */
-    public function getReader()
-    {
-        if (!$this->reader) {
-            $this->reader = new CachedReader(
-                new AnnotationReader(),
-                $this->getCache(),
-                $this->container->get('config')['debug']
-            );
-        }
-        return $this->reader;
-    }
-
-    public function getCache()
-    {
-        if ($this->cache) {
-            return $this->cache;
-        }
-        return $this->cache = $this->container->get(Cache::class);
-    }
-
-    /**
-     * RouteReader constructor.
-     * @param ContainerInterface $container
-     */
-    public function __construct(ContainerInterface $container)
-    {
-        $this->container = $container;
-    }
 
     public function getAnnotations()
     {
-        $controllers = $this->container->get('config')['controllers'];
-        foreach ($controllers as $controller) {
+        $classes = $this->getAllClassNames();
+        foreach ($classes as $controller) {
             $reflClass = new ReflectionClass($controller);
             $classAnnotations = $this->getReader()->getClassAnnotation($reflClass, 'Polar\Annotation\Route');
             $classAnnotations->middleware = $reflClass->getName();
             yield $classAnnotations;
         }
     }
+
+    public function loadMetadataForClass($className, ClassMetadata $metadata)
+    {
+        die($className);
+    }
+
+
 }

@@ -14,11 +14,14 @@ class ModuleConfig
     {
         AnnotationRegistry::registerFile(__DIR__ . DIRECTORY_SEPARATOR. "Annotation/Annotations.php");
         return [
-            'controllers' => [
+            'polar' => [
+                'annotations' => [
+                    'middleware' => [
+
+                    ],
+                ]
             ],
             'dependencies' => [
-                'invokables' => [
-                ],
                 'factories' => [
                     RouterInterface::class => Route\RouteFactory::class,
                     Route\Reader\Annotations::class => Route\Reader\AnnotationFactory::class,
