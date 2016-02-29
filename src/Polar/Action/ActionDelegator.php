@@ -2,9 +2,9 @@
 
 namespace Polar\Action;
 
-use Doctrine\Common\Annotations\AnnotationReader;
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
+use Polar\Annotation\Mapping\Driver\AnnotationDriver;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
@@ -46,13 +46,19 @@ class ActionDelegator implements DelegatorFactoryInterface
      */
     public function __invoke(ContainerInterface $container, $name, callable $callback, array $options = null)
     {
-        $reader = new AnnotationReader();
-        $reflClass = new \ReflectionClass($name);
-        $classAnnotations = $reader->getClassAnnotation($reflClass, 'Polar\Annotation\Template');
+
         $this->container = $container;
         /** @var AbstactAction $action */
         $action   = call_user_func($callback);
-        $action->setView($this->getView(), $classAnnotations->name);
+        /** @var AnnotationDriver $reader */
+        $reader = $container->get(AnnotationDriver::class);
+
+        $view = $reader->getAnnotations()->filter(function($item) use($name){
+           return $item->getName() == $name && $item->getTemplate() != null;
+        });
+        if (!$view->isEmpty()) {
+            $action->setView($this->getView(), $view->first()->getTemplate());
+        }
         return $action;
     }
 }

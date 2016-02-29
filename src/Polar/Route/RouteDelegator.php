@@ -4,7 +4,7 @@ namespace Polar\Route;
 
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
-use Zend\Expressive\Router\Route;
+use Polar\Annotation\Mapping\Driver\AnnotationDriver;
 use Zend\ServiceManager\Exception\ServiceNotCreatedException;
 use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\DelegatorFactoryInterface;
@@ -29,12 +29,13 @@ class RouteDelegator implements DelegatorFactoryInterface
     {
         /** @var AuraRouter $router */
         $router = call_user_func($callback);
-        /** @var Reader\Annotations $reader */
-        $reader = $container->get(Reader\Annotations::class);
-        foreach ($reader->getAnnotations() as $annotation) {
-            $route = new Route($annotation->path, $annotation->middleware, $annotation->methods, $annotation->name);
-            $route->setOptions($annotation->options);
-            $router->addRoute($route);
+        /** @var AnnotationDriver $reader */
+        $reader = $container->get(AnnotationDriver::class);
+        $routes = $reader->getAnnotations()->filter(function($item){
+           return $item->hasRoute();
+        });
+        foreach ($routes as $route) {
+            $router->addRoute($route->getRoute());
         }
         return $router;
     }

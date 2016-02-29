@@ -1,6 +1,6 @@
 <?php
 
-namespace Polar\Route\Reader;
+namespace Polar\Annotation\Mapping\Driver;
 
 use Interop\Container\ContainerInterface;
 use Interop\Container\Exception\ContainerException;
@@ -11,7 +11,7 @@ use Doctrine\Common\Annotations\AnnotationReader;
 use Doctrine\Common\Annotations\CachedReader;
 use Doctrine\Common\Cache\Cache;
 
-class AnnotationFactory implements FactoryInterface
+class AnnotationDriverFactory implements FactoryInterface
 {
 
     /**
@@ -33,6 +33,6 @@ class AnnotationFactory implements FactoryInterface
             $container->get(Cache::class),
             $container->get('config')['debug']
         );
-        return new Annotations($reader, $container->get('config')['polar']['annotations']['middleware']);
+        return new AnnotationDriver($reader, $container->get('config')['polar']['annotations']['middleware']);
     }
 }

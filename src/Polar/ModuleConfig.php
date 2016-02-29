@@ -24,7 +24,8 @@ class ModuleConfig
             'dependencies' => [
                 'factories' => [
                     RouterInterface::class => Route\RouteFactory::class,
-                    Route\Reader\Annotations::class => Route\Reader\AnnotationFactory::class,
+                    Annotation\Mapping\Driver\AnnotationDriver::class =>
+                        Annotation\Mapping\Driver\AnnotationDriverFactory::class,
                     EntityManager::class => Doctrine\ConfigurationFactory::class,
                     Cache::class => Doctrine\CacheFactory::class
                 ],
