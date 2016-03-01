@@ -16,10 +16,9 @@ class ModuleConfig
         return [
             'polar' => [
                 'annotations' => [
-                    'middleware' => [
-                        __DIR__. '/Middleware'
-                    ],
-                ]
+                    'middleware' => []
+                ],
+                'templates' => []
             ],
             'dependencies' => [
                 'factories' => [

@@ -9,6 +9,10 @@ use Zend\Diactoros\Response\HtmlResponse;
 use Zend\Expressive\Template\TemplateRendererInterface;
 use Zend\Stratigility\MiddlewareInterface;
 
+/**
+ * Class AbstractMiddleware
+ * @package Polar\Middleware
+ */
 abstract class AbstractMiddleware implements MiddlewareInterface
 {
     /**
@@ -16,16 +20,27 @@ abstract class AbstractMiddleware implements MiddlewareInterface
      */
     protected $container;
 
+    /**
+     * AbstractMiddleware constructor.
+     * @param ContainerInterface $container
+     */
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
     }
 
+    /**
+     * @return \ReflectionProperty
+     * @throws \Exception
+     */
     private function getTemplateName()
     {
+        $reflectionClass = new \ReflectionClass($this);
+        if (array_key_exists($reflectionClass->getName(), $this->container->get('config')['polar']['templates'])) {
+            return $this->container->get('config')['polar']['templates'][$reflectionClass->getName()];
+        }
         /** @var AnnotationDriver $reader */
         $reader = $this->container->get(AnnotationDriver::class);
-        $reflectionClass = new \ReflectionClass($this);
         if ($reflectionClass->hasProperty('templateName')) {
             return $reflectionClass->getProperty('templateName');
         }
@@ -33,15 +48,18 @@ abstract class AbstractMiddleware implements MiddlewareInterface
         if ($template instanceof Template) {
            return $template->name;
         }
-        //TODO get template from config
-        throw new \Exception('Template not found');
+        throw new \Exception('Template name is not configured');
     }
 
+    /**
+     * @param array $data
+     * @return HtmlResponse
+     * @throws \Exception
+     */
     public function render(array $data)
     {
         /** @var TemplateRendererInterface $template */
         $template = $this->container->get(TemplateRendererInterface::class);
         return new HtmlResponse($template->render($this->getTemplateName(), $data));
     }
-
 }
