@@ -10,7 +10,6 @@ use Zend\ServiceManager\Exception\ServiceNotFoundException;
 use Zend\ServiceManager\Factory\FactoryInterface;
 use Zend\Authentication\Storage\Session;
 
-
 class AuthenticationServiceFactory implements FactoryInterface
 {
 

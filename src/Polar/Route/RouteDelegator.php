@@ -31,8 +31,8 @@ class RouteDelegator implements DelegatorFactoryInterface
         $router = call_user_func($callback);
         /** @var AnnotationDriver $reader */
         $reader = $container->get(AnnotationDriver::class);
-        $routes = $reader->getAnnotations()->filter(function($item){
-           return $item->hasRoute();
+        $routes = $reader->getAnnotations()->filter(function ($item) {
+            return $item->hasRoute();
         });
         foreach ($routes as $route) {
             $router->addRoute($route->getRoute());

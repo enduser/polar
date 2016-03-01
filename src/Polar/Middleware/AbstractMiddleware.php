@@ -46,7 +46,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
         }
         $template = $reader->getReader()->getClassAnnotation($reflectionClass, Template::class);
         if ($template instanceof Template) {
-           return $template->name;
+            return $template->name;
         }
         throw new \Exception('Template name is not configured');
     }

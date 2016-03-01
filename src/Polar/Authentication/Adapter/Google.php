@@ -37,7 +37,7 @@ class Google extends AbstractAdapter
             /** @var \League\OAuth2\Client\Provider\GoogleUser $ownerDetails */
             $ownerDetails = $this->provider->getResourceOwner($token);
             return new Result(Result::SUCCESS, $ownerDetails);
-        } catch( \Exception $e) {
+        } catch (\Exception $e) {
             return new Result(Result::FAILURE, null, [$e->getMessage()]);
         }
     }

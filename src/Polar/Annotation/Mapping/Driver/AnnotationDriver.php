@@ -15,10 +15,10 @@ class AnnotationDriver extends AbstractAnnotationDriver
     /**
      * {@inheritDoc}
      */
-    protected $entityAnnotationClasses = array(
+    protected $entityAnnotationClasses = [
         'Polar\Annotation\Route' => 1,
         'Polar\Annotation\Template' => 2,
-    );
+    ];
 
     private $annotations = [];
 
@@ -61,7 +61,7 @@ class AnnotationDriver extends AbstractAnnotationDriver
     {
         /* @var $metadata \Polar\Annotation\Mapping\PolarMetadata */
         $class = $metadata->getReflectionClass();
-        if ( ! $class) {
+        if (! $class) {
             // this happens when running annotation driver in combination with
             // static reflection services. This is not the nicest fix
             $class = new \ReflectionClass($metadata->getName());
@@ -70,7 +70,7 @@ class AnnotationDriver extends AbstractAnnotationDriver
         $classAnnotations = $this->reader->getClassAnnotations($class);
         if ($classAnnotations) {
             foreach ($classAnnotations as $key => $annot) {
-                if ( ! is_numeric($key)) {
+                if (! is_numeric($key)) {
                     continue;
                 }
 
@@ -84,6 +84,4 @@ class AnnotationDriver extends AbstractAnnotationDriver
             $metadata->createTemplate($classAnnotations[Template::class]);
         }
     }
-
-
 }

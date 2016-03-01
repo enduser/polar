@@ -52,8 +52,8 @@ class AuthorizationMiddleware implements MiddlewareInterface
      */
     public function __invoke(Request $request, Response $response, callable $out = null)
     {
-        if($this->auth->hasIdentity()) {
-            return $out($request, $response);
+        if ($this->auth->hasIdentity()) {
+            return $out($request->withParsedBody(['user' => $this->auth->getIdentity()]), $response);
         }
         return new RedirectResponse('/authorize');
     }
