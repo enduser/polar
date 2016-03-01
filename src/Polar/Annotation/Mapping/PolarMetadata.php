@@ -5,6 +5,7 @@ namespace Polar\Annotation\Mapping;
 use Doctrine\Common\Persistence\Mapping\ClassMetadata;
 use Polar\Annotation\Route;
 use Polar\Annotation\Template;
+use Polar\Middleware\AuthorizationMiddleware;
 use Zend\Expressive\Router\Route as ZendRoute;
 
 class PolarMetadata implements ClassMetadata
@@ -33,7 +34,13 @@ class PolarMetadata implements ClassMetadata
 
     public function createRoute(Route $annotation)
     {
-        $route = new ZendRoute($annotation->path, $this->getName(), $annotation->methods, $annotation->name);
+        $middlewares = [];
+        if ($annotation->loginRequired) {
+            $middlewares[] = AuthorizationMiddleware::class;
+        }
+        $middlewares[] = $this->getName();
+
+        $route = new ZendRoute($annotation->path, $middlewares, $annotation->methods, $annotation->name);
         $route->setOptions($annotation->options);
         $this->route = $route;
     }

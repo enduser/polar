@@ -19,4 +19,6 @@ class Route
     public $name = null;
 
     public $options = [];
+
+    public $loginRequired = false;
 }
