@@ -42,7 +42,7 @@ abstract class AbstractMiddleware implements MiddlewareInterface
         /** @var AnnotationDriver $reader */
         $reader = $this->container->get(AnnotationDriver::class);
         if ($reflectionClass->hasProperty('templateName')) {
-            return $reflectionClass->getProperty('templateName');
+            return $reflectionClass->getProperty('templateName')->getValue($this);
         }
         $template = $reader->getReader()->getClassAnnotation($reflectionClass, Template::class);
         if ($template instanceof Template) {
@@ -53,13 +53,15 @@ abstract class AbstractMiddleware implements MiddlewareInterface
 
     /**
      * @param array $data
+     * @param null $templateName
      * @return HtmlResponse
      * @throws \Exception
      */
-    public function render(array $data)
+    public function render(array $data, $templateName = null)
     {
         /** @var TemplateRendererInterface $template */
         $template = $this->container->get(TemplateRendererInterface::class);
-        return new HtmlResponse($template->render($this->getTemplateName(), $data));
+        $name = ($templateName)?:$this->getTemplateName();
+        return new HtmlResponse($template->render($name, $data));
     }
 }
