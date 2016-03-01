@@ -14,7 +14,8 @@
     "doctrine/annotations": "^1.2",
     "mtymek/expressive-config-manager": "^0.3.1",
     "doctrine/cache": "^1.6",
-    "doctrine/orm": "^2.5"
+    "doctrine/orm": "^2.5",
+    "zendframework/zend-authentication": "^2.5"
   },
   "autoload": {
     "psr-4": { "Polar\\": "src/Polar" }

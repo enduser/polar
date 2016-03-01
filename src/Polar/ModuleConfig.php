@@ -5,7 +5,11 @@ namespace Polar;
 use Doctrine\Common\Annotations\AnnotationRegistry;
 use Doctrine\Common\Cache\Cache;
 use Doctrine\ORM\EntityManager;
+use Polar\Authentication\AuthenticationServiceFactory;
+use Polar\Middleware\AuthorizationFactory;
+use Polar\Middleware\AuthorizationMiddleware;
 use Zend\Expressive\Router\RouterInterface;
+use Zend\Authentication\AuthenticationServiceInterface;
 
 class ModuleConfig
 {
@@ -16,9 +20,11 @@ class ModuleConfig
         return [
             'polar' => [
                 'annotations' => [
-                    'middleware' => []
+                    'middleware' => [
+                        __DIR__. DIRECTORY_SEPARATOR . "Action"
+                    ]
                 ],
-                'templates' => []
+                'templates' => [],
             ],
             'dependencies' => [
                 'factories' => [
@@ -26,7 +32,9 @@ class ModuleConfig
                     Annotation\Mapping\Driver\AnnotationDriver::class =>
                         Annotation\Mapping\Driver\AnnotationDriverFactory::class,
                     EntityManager::class => Doctrine\ConfigurationFactory::class,
-                    Cache::class => Doctrine\CacheFactory::class
+                    Cache::class => Doctrine\CacheFactory::class,
+                    AuthenticationServiceInterface::class => AuthenticationServiceFactory::class,
+                    AuthorizationMiddleware::class => AuthorizationFactory::class
                 ],
                 'abstract_factories' => [
                     Middleware\MiddlewareFactory::class
