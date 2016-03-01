@@ -17,7 +17,7 @@ class ModuleConfig
             'polar' => [
                 'annotations' => [
                     'middleware' => [
-
+                        __DIR__. '/Middleware'
                     ],
                 ]
             ],
@@ -28,6 +28,9 @@ class ModuleConfig
                         Annotation\Mapping\Driver\AnnotationDriverFactory::class,
                     EntityManager::class => Doctrine\ConfigurationFactory::class,
                     Cache::class => Doctrine\CacheFactory::class
+                ],
+                'abstract_factories' => [
+                    Middleware\MiddlewareFactory::class
                 ],
                 'delegators' => [
                     RouterInterface::class => [
